@@ -5,6 +5,14 @@ This application makes use of the following third party libraries:
 
 Copyright 2016 Google
 
+## GooglePlacePicker
+
+Copyright 2016 Google
+
+## GooglePlaces
+
+Copyright 2016 Google
+
 ## React
 
 BSD License

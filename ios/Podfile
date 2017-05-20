@@ -22,8 +22,12 @@ target 'TaxiApp' do
   ]
 
   pod 'GoogleMaps'  # <~~ remove this line if you do not want to support GoogleMaps on iOS
+  pod 'GooglePlaces'
+  pod 'GooglePlacePicker'
   pod 'react-native-maps', path: '../node_modules/react-native-maps'
   pod 'react-native-google-maps', path: '../node_modules/react-native-maps'  # <~~ if you need GoogleMaps support on iOS
+
+
 
 end
 

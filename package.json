@@ -11,6 +11,7 @@
     "react": "16.0.0-alpha.6",
     "react-addons-update": "^15.5.2",
     "react-native": "0.44.0",
+    "react-native-google-places": "^2.1.0",
     "react-native-maps": "^0.15.0",
     "react-native-router-flux": "^3.39.1",
     "react-native-vector-icons": "^4.1.1",
