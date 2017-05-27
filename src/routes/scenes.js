@@ -3,7 +3,7 @@ import { Actions, Scene } from "react-native-router-flux";
 import HomeContainer from "./Home/containers/HomeContainer";
 
 const scenes = Actions.create(
-	<Scene key="root">
+	<Scene key="root" hideNavBar>
 		<Scene key="home" component={HomeContainer} title="home" initial />
 	</Scene>
 

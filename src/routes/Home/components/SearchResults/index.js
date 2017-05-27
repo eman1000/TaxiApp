@@ -20,7 +20,7 @@ export const SearchResults = ({predictions})=> {
 								</Left>
 								<Body>
 									<Text style={styles.primaryText}>{item.primaryText}</Text>
-									<Text style={styles.secondaryText}>{item.primaryText}</Text>
+									<Text style={styles.secondaryText}>{item.secondaryText}</Text>
 								</Body>
 							</ListItem>
 						</View>
