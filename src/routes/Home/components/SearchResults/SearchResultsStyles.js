@@ -2,7 +2,7 @@ import { Dimensions } from "react-native";
 var width = Dimensions.get("window").width; //full width
 const styles = {
     searchResultsWrapper:{
-        top:220,
+        top:160,
         position:"absolute",
         width:width,
         height:1000,

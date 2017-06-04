@@ -17,7 +17,8 @@
     "react-native-vector-icons": "^4.1.1",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.2.0"
+    "redux-thunk": "^2.2.0",
+    "superagent": "^3.5.2"
   },
   "devDependencies": {
     "babel-jest": "20.0.1",

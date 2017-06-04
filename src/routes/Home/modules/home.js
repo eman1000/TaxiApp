@@ -3,6 +3,10 @@ import constants from "./actionConstants";
 import { Dimensions } from "react-native"
 import RNGooglePlaces from "react-native-google-places";
 
+import request from "../../../util/request";
+
+import calculateFare from "../../../util/fareCalculator.js";
+
 //--------------------
 //Constants
 //--------------------
@@ -10,7 +14,12 @@ const {
 	GET_CURRENT_LOCATION,
 	GET_INPUT, 
 	TOGGLE_SEARCH_RESULT,
-	GET_ADDRESS_PREDICTIONS
+	GET_ADDRESS_PREDICTIONS,
+	GET_SELECTED_ADDRESS,
+	GET_DISTANCE_MATRIX,
+	GET_FARE,
+	BOOK_CAR
+
 	  } = constants;
 
 const { width, height } = Dimensions.get("window");
@@ -74,6 +83,102 @@ export function getAddressPredictions(){
 			})
 		)
 		.catch((error)=> console.log(error.message));
+	};
+}
+
+
+//get selected address
+
+export function getSelectedAddress(payload){
+	const dummyNumbers ={
+		baseFare:0.4,
+		timeRate:0.14,
+		distanceRate:0.97,
+		surge:1
+	}
+	return(dispatch, store)=>{
+		RNGooglePlaces.lookUpPlaceByID(payload)
+		.then((results)=>{
+			dispatch({
+				type:GET_SELECTED_ADDRESS,
+				payload:results
+			})
+		})
+		.then(()=>{
+			//Get the distance and time
+			if(store().home.selectedAddress.selectedPickUp && store().home.selectedAddress.selectedDropOff){
+				request.get("https://maps.googleapis.com/maps/api/distancematrix/json")
+				.query({
+					origins:store().home.selectedAddress.selectedPickUp.latitude + "," + store().home.selectedAddress.selectedPickUp.longitude,
+					destinations:store().home.selectedAddress.selectedDropOff.latitude + "," + store().home.selectedAddress.selectedDropOff.longitude,
+					mode:"driving",
+					key:"AIzaSyDUYbTR-3PDWPhgxjENs4yf35g2eHc641s"
+				})
+				.finish((error, res)=>{
+					dispatch({
+						type:GET_DISTANCE_MATRIX,
+						payload:res.body
+					});
+				})
+			}
+			setTimeout(function(){
+				if(store().home.selectedAddress.selectedPickUp && store().home.selectedAddress.selectedDropOff){
+					const fare = calculateFare(
+						dummyNumbers.baseFare,
+						dummyNumbers.timeRate,
+						store().home.distanceMatrix.rows[0].elements[0].duration.value,
+						dummyNumbers.distanceRate,
+						store().home.distanceMatrix.rows[0].elements[0].distance.value,
+						dummyNumbers.surge,
+					);
+					dispatch({
+						type:GET_FARE,
+						payload:fare
+					})
+				}
+
+
+			},1000)
+
+		})
+		.catch((error)=> console.log(error.message));
+	}
+}
+
+
+//BOOK CAR
+
+export function bookCar(){
+	return (dispatch, store)=>{
+		const payload = {
+			data:{
+				userName:"eman",
+				pickUp:{
+					address:store().home.selectedAddress.selectedPickUp.address,
+					name:store().home.selectedAddress.selectedPickUp.name,
+					latitude:store().home.selectedAddress.selectedPickUp.latitude,
+					longitude:store().home.selectedAddress.selectedPickUp.latitude
+				},
+				dropOff:{
+					address:store().home.selectedAddress.selectedDropOff.address,
+					name:store().home.selectedAddress.selectedDropOff.name,
+					latitude:store().home.selectedAddress.selectedDropOff.latitude,
+					longitude:store().home.selectedAddress.selectedDropOff.latitude
+				},
+				fare:store().home.fare,
+				status:"pending"
+			}
+		};
+
+		request.post("http://localhost:3000/api/bookings")
+		.send(payload)
+		.finish((error, res)=>{
+			dispatch({
+				type:BOOK_CAR,
+				payload:res.body
+			});
+		});
+
 	};
 }
 //--------------------
@@ -154,17 +259,68 @@ function handleGetAddressPredictions(state, action){
 	})
 }
 
+function handleGetSelectedAddress(state, action){
+	let selectedTitle = state.resultTypes.pickUp ? "selectedPickUp" : "selectedDropOff"
+	return update(state, {
+		selectedAddress:{
+			[selectedTitle]:{
+				$set:action.payload
+			}		
+		},
+		resultTypes:{
+			pickUp:{
+				$set:false
+			},
+			dropOff:{
+				$set:false
+			}
+		}
+	})
+}
+
+function handleGetDitanceMatrix(state, action){
+	return update(state, {
+		distanceMatrix:{
+			$set:action.payload
+		}
+	})
+}
+
+function handleGetFare(state, action){
+	return update(state, {
+		fare:{
+			$set:action.payload
+		}
+	})
+}
+
+//handle book car
+
+function handleBookCar(state, action){
+	return update(state, {
+		booking:{
+			$set:action.payload
+		}
+	})
+}
+
 const ACTION_HANDLERS = {
 	GET_CURRENT_LOCATION:handleGetCurrentLocation,
 	GET_INPUT:handleGetInputDate,
 	TOGGLE_SEARCH_RESULT:handleToggleSearchResult,
-	GET_ADDRESS_PREDICTIONS:handleGetAddressPredictions
+	GET_ADDRESS_PREDICTIONS:handleGetAddressPredictions,
+	GET_SELECTED_ADDRESS:handleGetSelectedAddress,
+	GET_DISTANCE_MATRIX:handleGetDitanceMatrix,
+	GET_FARE:handleGetFare,
+	BOOK_CAR:handleBookCar
 
 }
 const initialState = {
 	region:{},
 	inputData:{},
-	resultTypes:{}
+	resultTypes:{},
+	selectedAddress:{}
+
 
 };
 
