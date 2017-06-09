@@ -4,14 +4,16 @@ var bodyParser = require("body-parser");
 
 var index = require("./routes/index");
 var bookings = require("./routes/bookings");
+var driverLocation = require("./routes/driverLocation");
 
 var app = express();
 
 var port = 3000;
 
-app.listen(port, function(){
-	console.log("Server running on port", port);
-});
+var socket_io = require("socket.io");
+
+var io = socket_io();
+
 
 //views
 
@@ -29,3 +31,8 @@ app.use(bodyParser.urlencoded({extended:true}));
 
 app.use("/", index);
 app.use("/api", bookings);
+app.use("/api", driverLocation);
+
+io.listen(app.listen(port, function(){
+	console.log("Server running on port", port);
+}));

@@ -8,11 +8,17 @@ import HeaderComponent from "../../../components/HeaderComponent";
 import FooterComponent from "../../../components/FooterComponent";
 import Fare from "./Fare";
 import Fab from "./Fab";
-const taxiLogo = require("../../../assets/img/taxi_logo_white.png")
+const taxiLogo = require("../../../assets/img/taxi_logo_white.png");
+const carMarker = require("../../../assets/img/carMarker.png");
 class Home extends React.Component{
 
 	componentDidMount() {
+		var rx = this;
 		this.props.getCurrentLocation();
+		setTimeout(function(){
+			rx.props.getNearByDrivers();
+
+		}, 1000);
 	}
 
 	render(){
@@ -34,6 +40,8 @@ class Home extends React.Component{
 					predictions={this.props.predictions}
 					getSelectedAddress={this.props.getSelectedAddress}
 					selectedAddress={this.props.selectedAddress}
+					carMarker={carMarker}
+					nearByDrivers={this.props.nearByDrivers}
 				/>
 				}
 
