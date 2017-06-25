@@ -32,30 +32,133 @@
 
 
   <script>
-  	
-  	var socket = io();
+    
+    var socket = io();
 
-  	socket.on("connect", ()=>{
-  		console.log(socket.id);
+    socket.on("connect", ()=>{
+        console.log(socket.id);
 
-  		var driverCurrentData = {
-  			"socketId":socket.id,
-  			"locationId":"593a66b6734d1d141ca655e1"
-  		};
+        var driverCurrentData = {
+            "socketId":socket.id,
+            "locationId":"593a66b6734d1d141ca655e1"
+        };
 
-  		$.ajax({
-  			type: "PUT",
-  			url:"/api/driverLocationSocket/" + driverCurrentData.locationId,
-  			dataType:"json",
-  			data:driverCurrentData
-  		}).done(function(response){
-  			if(response !== ""){
-  				console.log("success");
+        $.ajax({
+            type: "PUT",
+            url:"/api/driverLocationSocket/" + driverCurrentData.locationId,
+            dataType:"json",
+            data:driverCurrentData
+        }).done(function(response){
+            if(response !== ""){
+            console.log("success");
 
-  			} else{
-  				console.log("Error" + response);
-  			}
-  		});
-  	});
+            } else{
+                console.log("Error" + response);
+            }
+        });
+
+        //When emited by user on random nearby driver
+
+        var driverRequest = socket.id + "driverRequest";
+        socket.on(driverRequest, function(passengerData){
+            if(passengerData){
+
+                console.log("Passenger looking for a driver", passengerData);
+
+                //Update booking status to confirmed on btn click
+                $(".btn").click(function(e){
+                    //e.preventDefault();
+                 
+                    var status = $("#bookingStatus").val();
+                    var dataToSend = {
+                        "driverId":"593a65fc734d1d141ca6557d",
+                        "id": passengerData._id,
+                        "status": status,
+                    };
+                    $.ajax({
+                        type: "PUT",
+                        url: "/api/bookings/" + passengerData._id,
+                        dataType: "json",
+                        data: dataToSend
+                    }).done(function( response ) {
+
+                        // Check for a successful (blank) response
+                        if (response !== "") {
+                            console.log("Success");
+                        }
+                        else {
+                            console.log("Error: " + response);
+                        }
+                    });
+                });
+            }
+        });
+
+        socket.on("trackDriver", function(location){
+            var driverMovement = [{
+                    lat:3.113667,
+                    long:101.687565
+                },
+                {
+                    lat:3.118748,
+                    long:101.678467
+
+                },
+                {
+                    lat:3.127270,
+                    long:101.688423
+
+                },
+                {
+                    lat:3.137383,
+                    long:101.695118
+                },
+                {
+                    lat:3.137383,
+                    long:101.695118
+                },
+                {
+                    lat:3.152857,
+                    long:101.703529
+                },
+                {
+                    lat:3.146642,
+                    long:101.695845
+                },
+                {
+                    lat:3.1591601,
+                    long:101.7136599
+            }];
+            var index = 0;
+            var interval = setInterval(function(){
+                var movementObj = driverMovement[index++];
+                if (index == driverMovement.length){
+                    clearInterval(interval);
+                    console.log(index)
+
+                }          
+                var driverCurrentLocation = {
+                    "locationId":location._id,
+                    "latitude": movementObj.lat,
+                    "longitude": movementObj.long
+                };
+                $.ajax({
+                    type: "PUT",
+                    url: "/api/driverLocation/" + location._id,
+                    dataType: "json",
+                    data: driverCurrentLocation
+                }).done(function( response ) {
+                    // Check for a successful (blank) response
+                    if (response !== "") {
+                        console.log("Driver Location updated ");
+                    }
+                    else {
+                        console.log("Error: " + response);
+                    }
+                });
+            },5000);
+              
+        });
+    });
 
   </script>

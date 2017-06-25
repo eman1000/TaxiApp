@@ -138,7 +138,7 @@ export function getSelectedAddress(payload){
 				}
 
 
-			},1000)
+			},2000)
 
 		})
 		.catch((error)=> console.log(error.message));
@@ -150,6 +150,8 @@ export function getSelectedAddress(payload){
 
 export function bookCar(){
 	return (dispatch, store)=>{
+		const nearByDrivers = store().home.nearByDrivers;
+		const nearByDriver = nearByDrivers[Math.floor(Math.random() * nearByDrivers.length)];
 		const payload = {
 			data:{
 				userName:"eman",
@@ -167,6 +169,12 @@ export function bookCar(){
 				},
 				fare:store().home.fare,
 				status:"pending"
+			},
+			nearByDriver:{
+				socketId:nearByDriver.socketId,
+				driverId:nearByDriver.driverId,
+				latitude:nearByDriver.coordinate.coordinates[1],
+				longitude:nearByDriver.coordinate.coordinates[0]
 			}
 		};
 
@@ -335,6 +343,16 @@ function handleGetNearbyDrivers(state, action){
 	});
 }
 
+
+function handleBookingConfirmed(state, action){
+    return update(state, {
+        booking:{
+            $set: action.payload
+        }
+    });
+
+}
+
 const ACTION_HANDLERS = {
 	GET_CURRENT_LOCATION:handleGetCurrentLocation,
 	GET_INPUT:handleGetInputDate,
@@ -344,7 +362,8 @@ const ACTION_HANDLERS = {
 	GET_DISTANCE_MATRIX:handleGetDitanceMatrix,
 	GET_FARE:handleGetFare,
 	BOOK_CAR:handleBookCar,
-	GET_NEARBY_DRIVERS:handleGetNearbyDrivers
+	GET_NEARBY_DRIVERS:handleGetNearbyDrivers,
+	BOOKING_CONFIRMED:handleBookingConfirmed
 
 
 }

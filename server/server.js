@@ -5,6 +5,7 @@ var bodyParser = require("body-parser");
 var index = require("./routes/index");
 var bookings = require("./routes/bookings");
 var driverLocation = require("./routes/driverLocation");
+var drivers = require("./routes/drivers");
 
 var app = express();
 
@@ -32,7 +33,12 @@ app.use(bodyParser.urlencoded({extended:true}));
 app.use("/", index);
 app.use("/api", bookings);
 app.use("/api", driverLocation);
+app.use("/api", drivers);
 
 io.listen(app.listen(port, function(){
 	console.log("Server running on port", port);
 }));
+
+app.io = io.on("connection", function(socket){
+	console.log("Socket connected: " + socket.id);
+});

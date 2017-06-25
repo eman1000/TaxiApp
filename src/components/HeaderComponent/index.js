@@ -12,8 +12,11 @@ export const HeaderComponent =  ({logo})=>{
 					<Icon name="bars" style={styles.icon} />
 				</Button>
 			</Left>
-			<Body>
-				<Image resizeMode="contain" style={styles.logo} source={logo}/>
+			<Body>{logo &&
+					<Image resizeMode="contain" style={styles.logo} source={logo}/>
+					||
+					<Text style={styles.headerText}>Driver on the way</Text>
+				}
 			</Body>
 
 			<Right>

@@ -1,4 +1,6 @@
 rootProject.name = 'TaxiApp'
+include ':react-native-spinkit'
+project(':react-native-spinkit').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-spinkit/android')
 include ':react-native-google-places'
 project(':react-native-google-places').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-google-places/android')
 include ':react-native-vector-icons'

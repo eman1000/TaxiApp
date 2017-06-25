@@ -8,7 +8,7 @@ import {
 	getSelectedAddress,
 	bookCar,
 	getNearByDrivers
-} from "../modules/home";
+} from "../module/home";
 
 const mapStateToProps = (state) => ({
 	region: state.home.region,
