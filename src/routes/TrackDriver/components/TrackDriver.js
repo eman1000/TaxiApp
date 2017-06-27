@@ -29,43 +29,43 @@ class TrackDriver extends React.Component{
 		}
 		return(
 			<Container>
-				<HeaderComponent />
-				{
-					this.props.region &&
-					<MapTrack
-						region={this.props.region}
-						selectedAddress={this.props.selectedAddress}
-						driverLocation={this.props.driverLocation}
-						showCarMaker={this.props.showCarMaker}
-						carMarker={carMarker}
+				<View style={{flex:1}}>
+					<HeaderComponent />
+					{
+						this.props.region &&
+						<MapTrack
+							region={this.props.region}
+							selectedAddress={this.props.selectedAddress}
+							driverLocation={this.props.driverLocation}
+							showCarMaker={this.props.showCarMaker}
+							carMarker={carMarker}
 
-					/>
+						/>
 
-				}
-				{
-					this.props.distanceFromDriver &&
-				
-					<DriverOnTheWayFooter
+					}
+
+					{
+						this.props.distanceFromDriver.rows &&
+					
+						<DriverOnTheWayFooter
+							driverInfo={this.props.driverInfo}
+							distanceFromDriver={this.props.distanceFromDriver}
+
+						/>
+					}
+					<DriverFooterProfile
 						driverInfo={this.props.driverInfo}
-						distanceFromDriver={this.props.distanceFromDriver}
-
 					/>
 
-				}
-
-				<DriverFooterProfile
-					driverInfo={this.props.driverInfo}
-				/>
-
-				{
-					this.props.showDriverFound &&
-					<DriverFound
-						driverInfo={this.props.driverInfo}
-						getDriverLocation={this.props.getDriverLocation}
-					/>
-				}
+					{
+						this.props.showDriverFound &&
+						<DriverFound
+							driverInfo={this.props.driverInfo}
+							getDriverLocation={this.props.getDriverLocation}
+						/>
+					}
 				
-
+				</View>
 			</Container>
 
 		);

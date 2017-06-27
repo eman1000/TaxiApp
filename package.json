@@ -7,7 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "native-base": "^2.1.3",
+    "native-base": "2.1.3",
     "react": "16.0.0-alpha.6",
     "react-addons-update": "^15.5.2",
     "react-native": "0.44.0",
@@ -19,11 +19,15 @@
     "react-native-vector-icons": "^4.1.1",
     "react-redux": "^5.0.4",
     "redux": "^3.6.0",
+    "redux-socket.io": "^1.4.0",
     "redux-thunk": "^2.2.0",
+    "socket-io": "^1.0.0",
+    "socket.io-client": "^2.0.3",
     "superagent": "^3.5.2"
   },
   "devDependencies": {
     "babel-jest": "20.0.1",
+    "babel-preset-es2015": "^6.24.1",
     "babel-preset-react-native": "1.9.2",
     "jest": "20.0.1",
     "react-test-renderer": "16.0.0-alpha.6",

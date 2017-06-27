@@ -19,7 +19,7 @@ export const DriverFound = ({ driverInfo, getDriverLocation})=>{
 							Hi my name is
 						</Text>
 						<Text style={styles.nameText}>
-							{driverInfo.firstname} {driverInfo.lastName}
+							{driverInfo.firstName} {driverInfo.lastName}
 						</Text>
 						<Text style={styles.bioText}>
 							and I am 0.2km away.
@@ -30,10 +30,10 @@ export const DriverFound = ({ driverInfo, getDriverLocation})=>{
 				<View style={styles.vehicleDetails}>
 					<Text style={styles.vehicleText}>Vehicle Plate number:</Text>
 					<Text style={styles.vehicleNumber}> {vehicle && vehicle.plateNumber}</Text>
+					<Button  style={styles.nextBtn} onPress={()=>getDriverLocation()}>
+						<Text style={styles.nextBtnText}>Next</Text>
+					</Button>
 				</View>
-				<Button  style={styles.nextBtn} onPress={()=>getDriverLocation()}>
-					<Text style={styles.nextBtnText}>Next</Text>
-				</Button>
 			</View>
 			
 		</View>
